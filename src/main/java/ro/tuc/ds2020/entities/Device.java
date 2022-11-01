@@ -26,7 +26,7 @@ public class Device implements Serializable {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "device_id", nullable = false)
     private List<Consumption> consumptionList;
 

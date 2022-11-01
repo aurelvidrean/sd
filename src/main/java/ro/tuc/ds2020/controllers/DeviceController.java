@@ -18,7 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/device")
 public class DeviceController {
 
     private final DeviceService deviceService;
@@ -32,8 +32,8 @@ public class DeviceController {
     public ResponseEntity<List<DeviceDTO>> getDevices() {
         List<DeviceDTO> dtos = deviceService.findDevices();
         for (DeviceDTO dto : dtos) {
-            Link userLink = linkTo(methodOn(UserController.class)
-                    .getUser(dto.getId())).withRel("userDetails");
+            Link userLink = linkTo(methodOn(DeviceController.class)
+                    .getDevice(dto.getId())).withRel("deviceDetails");
             dto.add(userLink);
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
@@ -47,8 +47,14 @@ public class DeviceController {
 
     @PostMapping()
     public ResponseEntity<UUID> insertDevice(@Valid @RequestBody DeviceDTO deviceDTO) {
-        UUID deviceID = deviceService.insert(deviceDTO);
+        UUID deviceID = deviceService.insert(deviceDTO, UUID.fromString("a5adcd1d-3217-4d97-b503-9e0f22256e5c"));
         return new ResponseEntity<>(deviceID, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/map/{deviceId}/{userId}")
+    public ResponseEntity<UUID> mapDeviceToUser(@PathVariable("deviceId") UUID deviceId,@PathVariable("userId") UUID userId){
+        UUID id=deviceService.mapDeviceToUser(deviceId,userId);
+        return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
