@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.tuc.ds2020.dtos.DeviceDTO;
-import ro.tuc.ds2020.dtos.UserDTO;
 import ro.tuc.ds2020.services.DeviceService;
 
 import javax.validation.Valid;

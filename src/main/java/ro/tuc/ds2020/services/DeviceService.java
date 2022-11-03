@@ -83,6 +83,7 @@ public class DeviceService {
         }
     }
 
+    @Transactional
     public UUID update(UUID id, DeviceDTO deviceDTO) {
         Optional<Device> prosumerOptional = deviceRepository.findById(id);
         if (!prosumerOptional.isPresent()) {
@@ -97,6 +98,7 @@ public class DeviceService {
         return deviceToUpdate.getId();
     }
 
+    @Transactional
     public UUID delete(UUID id) {
         Optional<Device> prosumerOptional = deviceRepository.findById(id);
         if (!prosumerOptional.isPresent()) {
