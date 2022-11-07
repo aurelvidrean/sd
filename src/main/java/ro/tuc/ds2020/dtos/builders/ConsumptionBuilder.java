@@ -9,9 +9,8 @@ public class ConsumptionBuilder {
     }
 
     public static ConsumptionDTO toConsumptionDTO(Consumption consumption) {
-        return new ConsumptionDTO(consumption.getTimestamp(), consumption.getEnergy());
+        return new ConsumptionDTO(consumption.getId(), consumption.getTimestamp(), consumption.getEnergy());
     }
-
     public static Consumption toConsumptionEntity(ConsumptionDTO consumptionDTO) {
         return new Consumption(consumptionDTO.getTimestamp(), consumptionDTO.getEnergy());
     }

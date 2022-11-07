@@ -17,7 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/consumptions")
+@RequestMapping(value = "/consumption")
 public class ConsumptionController {
 
     private final ConsumptionService consumptionService;
@@ -44,17 +44,23 @@ public class ConsumptionController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{id}")
-    public ResponseEntity<UUID> insertConsumption(@Valid @RequestBody ConsumptionDTO consumptionDTO, @PathVariable("id") UUID deviceId) {
-        UUID consumptionId = consumptionService.insert(consumptionDTO, deviceId);
+    @PostMapping()
+    public ResponseEntity<UUID> insertConsumption(@Valid @RequestBody ConsumptionDTO consumptionDTO) {
+        UUID consumptionId = consumptionService.insert(consumptionDTO);
         return new ResponseEntity<>(consumptionId, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<UUID> deleteConsumption(@PathVariable("id") UUID consumptionId) {
-        UUID deletedConsumption = consumptionService.delete(consumptionId);
+        UUID deletedConsumption = consumptionService.deleteConsumptionById(consumptionId);
         return new ResponseEntity<>(deletedConsumption, HttpStatus.OK);
 
+    }
+
+    @PutMapping()
+    public ResponseEntity<UUID> updateConsumption(@Valid @RequestBody ConsumptionDTO consumptionDTO) {
+        UUID consumptionId = consumptionService.updateConsumption(consumptionDTO);
+        return new ResponseEntity<>(consumptionId, HttpStatus.OK);
     }
 
 }

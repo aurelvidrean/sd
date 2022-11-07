@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
 import ro.tuc.ds2020.dtos.UserDTO;
 import ro.tuc.ds2020.dtos.builders.UserBuilder;
+import ro.tuc.ds2020.entities.Device;
 import ro.tuc.ds2020.entities.User;
 import ro.tuc.ds2020.repositories.UserRepository;
 
@@ -48,17 +49,14 @@ public class UserService {
         return user.getId();
     }
 
-    public UUID update(UUID id, UserDTO userDTO) {
-        Optional<User> prosumerOptional = userRepository.findById(id);
+    public UUID update(UserDTO userDTO) {
+        Optional<User> prosumerOptional = userRepository.findById(userDTO.getId());
         if (!prosumerOptional.isPresent()) {
-            LOGGER.error("Update-User with id {} was not found in db", id);
-            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
+            LOGGER.error("Update-User with id {} was not found in db", userDTO.getId());
+            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + userDTO.getId());
         }
-        User userToUpdate = prosumerOptional.get();
-        userToUpdate.setName(userDTO.getName());
-        userToUpdate.setPassword(userDTO.getPassword());
-        userToUpdate.setAdmin(userDTO.isAdmin());
-        userToUpdate.setDevices(userDTO.getDevices());
+        User userToUpdate = UserBuilder.toUserEntity(userDTO);
+        userToUpdate.setId(userDTO.getId());
         userRepository.save(userToUpdate);
         return userToUpdate.getId();
     }
@@ -69,7 +67,29 @@ public class UserService {
             LOGGER.error("Delete-User with id {} was not found in db", id);
             throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
         }
-        userRepository.delete(prosumerOptional.get());
-        return prosumerOptional.get().getId();
+        List<Device> userDevices = prosumerOptional.get().getDevices();
+        Optional<User> u = userRepository.findById(UUID.fromString("b4527c7f-c7fb-489a-8786-f332e1d81de4"));
+        if (u.isPresent()) {
+            User admin = u.get();
+            List<Device> adminDevices = admin.getDevices();
+            adminDevices.addAll(userDevices);
+            admin.setDevices(adminDevices);
+            userRepository.save(admin);
+            prosumerOptional.get().setDevices(null);
+            userRepository.delete(prosumerOptional.get());
+            return prosumerOptional.get().getId();
+        } else {
+            LOGGER.error("Delete-User with id {} was not found in db", id);
+            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
+        }
+    }
+
+    public UserDTO getUserCredentials(String name, String password) {
+        Optional<User> userOptional = userRepository.getUserCredentials(name, password);
+        if(!userOptional.isPresent()){
+            LOGGER.error("User with name and password {} was not found in db", name);
+            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + name);
+        }
+        return UserBuilder.toUserDTO(userOptional.get());
     }
 }

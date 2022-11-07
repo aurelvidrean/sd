@@ -8,13 +8,14 @@ import java.util.UUID;
 public class ConsumptionDTO extends RepresentationModel<ConsumptionDTO> {
 
     private UUID id;
-    private Timestamp timestamp;
+    private Long timestamp;
     private double energy;
 
     public ConsumptionDTO() {
     }
 
-    public ConsumptionDTO(Timestamp timestamp, double energy) {
+    public ConsumptionDTO(UUID id, Long timestamp, double energy) {
+        this.id = id;
         this.timestamp = timestamp;
         this.energy = energy;
     }
@@ -27,11 +28,11 @@ public class ConsumptionDTO extends RepresentationModel<ConsumptionDTO> {
         this.id = id;
     }
 
-    public Timestamp getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -21,7 +21,7 @@ public class Consumption implements Serializable {
     private UUID id;
 
     @Column(name = "timestamp", nullable = false)
-    private Timestamp timestamp;
+    private Long timestamp;
 
     @Column(name = "energy", nullable = false)
     private double energy;
@@ -29,7 +29,7 @@ public class Consumption implements Serializable {
     public Consumption(){
     }
 
-    public Consumption(Timestamp timestamp, double energy) {
+    public Consumption(Long timestamp, double energy) {
         this.timestamp = timestamp;
         this.energy = energy;
     }
@@ -42,11 +42,11 @@ public class Consumption implements Serializable {
         this.id = id;
     }
 
-    public Timestamp getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 

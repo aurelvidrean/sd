@@ -53,9 +53,9 @@ public class UserController {
         return new ResponseEntity<>(userID, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<UUID> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable("id") UUID userId) {
-        UUID updatedUser = userService.update(userId, userDTO);
+    @PutMapping()
+    public ResponseEntity<UUID> updateUser(@Valid @RequestBody UserDTO userDTO) {
+        UUID updatedUser = userService.update(userDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
@@ -63,5 +63,16 @@ public class UserController {
     public ResponseEntity<UUID> deleteUser(@PathVariable("id") UUID userId) {
         UUID deletedUser = userService.delete(userId);
         return new ResponseEntity<>(deletedUser, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/login/username/{name}/password/{password}")
+    public ResponseEntity<UserDTO> getUserCredentials(@PathVariable("name") String name, @PathVariable("password") String password) {
+        UserDTO dto = userService.getUserCredentials(name, password);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{userId}/{deviceId}")
+    public ResponseEntity<UUID> addDeviceToUser(@PathVariable("userId") UUID userId,@PathVariable("deviceId") UUID deviceId) {
+        return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 }
